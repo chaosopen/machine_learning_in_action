@@ -43,7 +43,9 @@ module.exports = {
               path:"/chapter1/index",
               collapsable: false,
               children:[
-                '/wait',
+                '/chapter1/ai_intro',
+                '/chapter1/ml_intro',
+                '/chapter1/ai_need_maths',
               ]
             },
             {
@@ -51,7 +53,11 @@ module.exports = {
               path:"/chapter2/index",
               collapsable: false,
               children:[
-                '/wait',
+                '/chapter2/ml_workflow',
+                '/chapter2/ml_category',
+                '/chapter2/model_intro',
+                '/chapter2/install_ml',
+                '/chapter2/first_ml_project',
               ]
             },
             {
