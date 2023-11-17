@@ -1,13 +1,12 @@
 ## 本章目录
 
 
-1. K均值
-2. 决策树
-3. 随机森林
-4. 逻辑回归
-5. SVM
-6. 朴素贝叶斯
-7. K最近邻
-8. Adaboost
-9. 神经网络
-10. 马尔可夫
+- [3.1：K-近邻算法](knn.md)
+- [3.2：决策树算法](decision_tree.md)
+- [3.3：随机森林算法](random_forest.md)
+- [3.4：朴素贝叶斯算法](naive_bayes.md)
+- [3.5：SVM算法](svm.md)
+- [3.6：线性回归算法](linear_regression.md)
+- [3.7：逻辑回归算法](logistic_regression.md)
+- [3.8：K-Means聚类算法](kmeans.md)
+- [3.9：算法选择建议](algorithm_selection.md)

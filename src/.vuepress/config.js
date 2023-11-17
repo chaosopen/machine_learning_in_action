@@ -65,7 +65,15 @@ module.exports = {
               path:"/chapter3/index",
               collapsable: false,
               children:[
-                '/wait',
+                '/chapter3/knn',
+                '/chapter3/decision_tree',
+                '/chapter3/random_forest',
+                '/chapter3/naive_bayes',
+                '/chapter3/svm',
+                '/chapter3/linear_regression',
+                '/chapter3/logistic_regression',
+                '/chapter3/kmeans',
+                '/chapter3/algorithm_selection',
               ]
             },
             {
@@ -73,7 +81,11 @@ module.exports = {
               path:"/chapter4/index",
               collapsable: false,
               children:[
-                '/wait',
+                '/chapter4/spam_classify',
+                '/chapter4/boston_house_price_forecast',
+                '/chapter4/stock_price_predict',
+                '/chapter4/card_anti_fraud',
+                '/chapter4/movie_recommend',
               ]
             },
             {
