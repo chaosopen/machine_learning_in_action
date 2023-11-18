@@ -45,7 +45,7 @@ module.exports = {
               children:[
                 '/chapter1/ai_intro',
                 '/chapter1/ml_intro',
-                '/chapter1/ai_need_maths',
+                // '/chapter1/ai_need_maths',
               ]
             },
             {
