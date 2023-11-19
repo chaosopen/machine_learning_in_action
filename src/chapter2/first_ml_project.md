@@ -13,7 +13,7 @@ sklearn给我们提供了很多处理好的数据，所以我们直接拿来用�
 
 ## 2.5.3 添加依赖
 
-```python
+```py
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -21,7 +21,7 @@ from sklearn.neighbors import KNeighborsClassifier
 ```
 ## 2.5.4 加载数据集
 
-```python
+```py
 iris = load_iris() 
 #iris.data获取数据集中的特征值
 #iris.target获取目标值
@@ -31,7 +31,7 @@ x_train, x_test, y_train, y_test = train_test_split(iris.data, iris.target, test
 ```
 sklearn的数据集给我们处理好了，我们无需做数据处理
 ## 2.5.5 特征工程
-```python
+```py
 # 数据标准化
 transfer = StandardScaler()
 # x_train,x_test的标准差、让其平均值一样
@@ -39,7 +39,7 @@ x_train = transfer.fit_transform(x_train)
 x_test = transfer.transform(x_test)
 ```
 ## 2.5.6 模型训练
-```python
+```py
 # n_neighbors 邻居的数量，也就是Knn中的K值
 model = KNeighborsClassifier(n_neighbors=3)
 # 调用fit方法 传入特征和目标进行模型训练
@@ -48,20 +48,20 @@ model.fit(x_train, y_train)
 ## 2.5.7 模型评估
 
 ### 1. 直接对比真实值与预测值
-```python
+```py
 y_predict = model.predict(x_test)
 print('y_predict:', y_predict)
 print('直接对比真实值与预测值:', y_test == y_predict)
 
 ```
 ### 2. 计算准确率
-```python
+```py
 score = model.score(x_test, y_test)
 print('accuracy:', score)
 ```
 
 ## 2.5.8 完整代码
-```python
+```py
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler

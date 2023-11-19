@@ -77,15 +77,23 @@ module.exports = {
               ]
             },
             {
-              title:"第四章：机器学习实战",
+              title:"第四章：算法通用知识",
               path:"/chapter4/index",
               collapsable: false,
               children:[
-                '/chapter4/spam_classify',
-                '/chapter4/boston_house_price_forecast',
-                '/chapter4/stock_price_predict',
-                '/chapter4/card_anti_fraud',
-                '/chapter4/movie_recommend',
+                '/chapter4/distance_measurement',
+              ]
+            },
+            {
+              title:"第五章：机器学习实战",
+              path:"/chapter5/index",
+              collapsable: false,
+              children:[
+                '/chapter5/spam_classify',
+                '/chapter5/boston_house_price_forecast',
+                '/chapter5/stock_price_predict',
+                '/chapter5/card_anti_fraud',
+                '/chapter5/movie_recommend',
               ]
             },
             {
