@@ -5,6 +5,17 @@ module.exports = {
     port: 8089,
     head: [
       ['meta', { name: 'keywords', content: '人工智能,机器学习,数据分析'}],
+      [
+        'script',
+        {},
+        `var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?ad853f2bf7970012985d6598765c2f9a";
+          var s = document.getElementsByTagName("script")[0]; 
+          s.parentNode.insertBefore(hm, s);
+        })();`
+      ]
     ],
     plugins: [
       ['sitemap', {
