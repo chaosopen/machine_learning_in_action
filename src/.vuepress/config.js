@@ -93,6 +93,7 @@ module.exports = {
               collapsable: false,
               children:[
                 '/chapter4/distance_measurement',
+                '/chapter4/feature_engineering'
               ]
             },
             {
