@@ -74,7 +74,7 @@ if __name__ == '__main__':
 from sklearn.feature_extraction.text import CountVectorizer
 
 if __name__ == '__main__':
-    data = ["life is short,i like like python", "life is too long,i dislike python"]
+    data = ["life is short,i like python", "life is too long,i dislike python"]
     # 1、实例化一个转换器类
     transfer = CountVectorizer()
     # 2、调用fit_transform
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 输出结果为：
 ```py
 文本特征抽取的结果：
- [[0 1 1 2 0 1 1 0]
+ [[0 1 1 1 0 1 1 0]
  [1 1 1 0 1 1 0 1]]
 返回特征名字：
  ['dislike', 'is', 'life', 'like', 'long', 'python', 'short', 'too']
