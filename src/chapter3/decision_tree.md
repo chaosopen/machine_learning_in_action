@@ -136,11 +136,11 @@ H = -（p1 * logp1 + p2 * logp2 + ... + p32 * logp32），
 
 4. 若按婚姻状况属性来划分，属性婚姻状况有三个可能的取值{married，single，divorced}，分别计算划分后的Gini系数增益。
 
-​ {married} | {single,divorced}
+ {married} | {single,divorced}
 
-​ {single} | {married,divorced}
+ {single} | {married,divorced}
 
-​ {divorced} | {single,married}
+ {divorced} | {single,married}
 
 分组为{married} | {single,divorced}时：
 
@@ -206,7 +206,7 @@ H = -（p1 * logp1 + p2 * logp2 + ... + p32 * logp32），
 ### 3. 评估分割点的好坏
 如果一个分割点可以将当前的所有节点分为两类，使得每一类都很“纯”，也就是同一类的记录较多，那么就是一个好分割点。
 
-​ 比如上面的例子，“拥有房产”，可以将记录分成了两类，“是”的节点全部都可以偿还债务，非常“纯”；“否”的节点，可以偿还贷款和无法偿还贷款的人都有，不是很“纯”，但是两个节点加起来的纯度之和与原始节点的纯度之差最大，所以按照这种方法分割。构建决策树采用贪心算法，只考虑当前纯度差最大的情况作为分割点。
+ 比如上面的例子，“拥有房产”，可以将记录分成了两类，“是”的节点全部都可以偿还债务，非常“纯”；“否”的节点，可以偿还贷款和无法偿还贷款的人都有，不是很“纯”，但是两个节点加起来的纯度之和与原始节点的纯度之差最大，所以按照这种方法分割。构建决策树采用贪心算法，只考虑当前纯度差最大的情况作为分割点。
 
 ## 3.2.4 常见决策树类型比较
 
@@ -278,3 +278,122 @@ C4.5不一定是二叉树，但CART一定是二叉树。
 在已生成`过拟合`决策树上进行剪枝，可以得到简化版的剪枝决策树。
 
 ## 2.2.6 决策树算法API
+
+### 1. 构建参数介绍
+```py
+sklearn.tree.DecisionTreeClassifier(criterion='gini', max_depth=None,random_state=None)
+```
+- criterion
+
+  - 特征选择标准
+  - "gini"或者"entropy"，前者代表基尼系数，后者代表信息增益。一默认"gini"，即CART算法。
+- min_samples_split
+  - 内部节点再划分所需最小样本数
+  - 这个值限制了子树继续划分的条件，如果某节点的样本数少于min_samples_split，则不会继续再尝试选择最优特征来进行划分。 默认是2.如果样本量不大，不需要管这个值。如果样本量数量级非常大，则推荐增大这个值。我之前的一个项目例子，有大概10万样本，建立决策树时，我选择了min_samples_split=10。可以作为参考。
+- min_samples_leaf
+  - 叶子节点最少样本数
+  - 这个值限制了叶子节点最少的样本数，如果某叶子节点数目小于样本数，则会和兄弟节点一起被剪枝。 默认是1,可以输入最少的样本数的整数，或者最少样本数占样本总数的百分比。如果样本量不大，不需要管这个值。如果样本量数量级非常大，则推荐增大这个值。之前的10万样本项目使用min_samples_leaf的值为5，仅供参考。
+- max_depth
+  - 决策树最大深度
+  - 决策树的最大深度，默认可以不输入，如果不输入的话，决策树在建立子树的时候不会限制子树的深度。一般来说，数据少或者特征少的时候可以不管这个值。如果模型样本量多，特征也多的情况下，推荐限制这个最大深度，具体的取值取决于数据的分布。常用的可以取值10-100之间
+- random_state
+  - 随机数种子
+
+### 2. 代码过程
+
+#### 1. 导入依赖
+```py
+import pandas as pd
+from sklearn.feature_extraction import DictVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+```
+
+#### 2. 数据集介绍
+
+**泰坦尼克号数据**
+
+在泰坦尼克号和titanic2数据帧描述泰坦尼克号上的个别乘客的生存状态。这里使用的数据集是由各种研究人员开始的。其中包括许多研究人员创建的旅客名单，由Michael A. Findlay编辑。我们提取的数据集中的特征是票的类别，存活，乘坐班，年龄，登陆，home.dest，房间，票，船和性别。
+
+> 数据：https://www.kaggle.com/competitions/titanic/data?select=train.csv
+
+
+![图3-2-30](../imgs/3-2-30.png)
+
+经过观察数据得到：
+- 乘坐班是指乘客班（1，2，3），是社会经济阶层的代表。
+- 其中age数据存在缺失。
+
+#### 3. 数据处理
+1. 获取数据
+```py
+titan = pd.read_csv("./data/train.csv")
+```
+2. 数据基本处理
+- 确定特征值，目标值
+```py
+x = titan[["Pclass", "Age", "Sex"]]
+y = titan["Survived"]
+```
+- 缺失值处理
+```py
+# 缺失值需要处理，将特征当中有类别的这些特征进行字典特征抽取
+x['Age'].fillna(x['Age'].mean(), inplace=True)
+```
+- 数据划分训练集、测试集
+```py
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=22)
+```
+#### 4. 特征工程
+关于特征工程详情介绍：[特征工程](/chapter4/feature_engineering.md)
+
+特征中出现类别符号，需要进行one-hot编码处理(DictVectorizer)  
+x_train.to_dict(orient="records") 需要将数组特征转换成字典数据
+```py
+transfer = DictVectorizer(sparse=False)
+
+x_train = transfer.fit_transform(x_train.to_dict(orient="records"))
+x_test = transfer.fit_transform(x_test.to_dict(orient="records"))
+```
+
+#### 5. 模型训练
+如果没有指定max_depth那么会根据信息熵的条件直到最终结束。这里我们可以指定树的深度来进行限制树的大小
+```py
+# 模型训练
+model = DecisionTreeClassifier(criterion="entropy", max_depth=5)
+model.fit(x_train, y_train)
+
+# 模型评估
+score = model.score(x_test, y_test)
+print("模型评估得分：", score)
+# 预测结果
+res_y = model.predict(x_test)
+print("预测结果：", res_y)
+```
+
+## 2.2.7 决策树可视化
+
+### 1. 保存树的结构到dot文件
+```py
+from sklearn.tree import export_graphviz
+
+# 中间代码省略
+
+export_graphviz(model, out_file="./data/tree.dot", feature_names=["Age", "Pclass", "Sex", "Survived"])
+```
+
+### 2. 网站显示结构
+
+[http://webgraphviz.com/](http://webgraphviz.com/)
+
+打开dot文件内容复制到网站中显示
+
+## 2.2.8 决策树算法优缺点
+
+- 优点：
+  - 简单的理解和解释，树木可视化。
+- 缺点：
+  - 决策树学习者可以创建不能很好地推广数据的过于复杂的树,容易发生过拟合。
+- 改进：
+  - 减枝cart算法
+  - 随机森林（集成学习的一种）
