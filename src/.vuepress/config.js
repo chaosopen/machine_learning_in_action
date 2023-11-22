@@ -78,11 +78,11 @@ module.exports = {
               children:[
                 '/chapter3/knn',
                 '/chapter3/decision_tree',
-                '/chapter3/random_forest',
                 '/chapter3/naive_bayes',
-                '/chapter3/svm',
                 '/chapter3/linear_regression',
                 '/chapter3/logistic_regression',
+                '/chapter3/svm',
+                '/chapter3/random_forest',
                 '/chapter3/kmeans',
                 '/chapter3/algorithm_selection',
               ]
