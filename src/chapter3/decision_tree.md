@@ -303,10 +303,12 @@ sklearn.tree.DecisionTreeClassifier(criterion='gini', max_depth=None,random_stat
 
 #### 1. 导入依赖
 ```py
+import joblib
 import pandas as pd
-from sklearn.feature_extraction import DictVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
 ```
 
 #### 2. 数据集介绍
@@ -327,7 +329,7 @@ from sklearn.tree import DecisionTreeClassifier
 #### 3. 数据处理
 1. 获取数据
 ```py
-titan = pd.read_csv("./data/train.csv")
+    titan_data = pd.read_csv("./data/泰坦尼克号数据集.csv")
 ```
 2. 数据基本处理
 - 确定特征值，目标值
@@ -342,18 +344,16 @@ x['Age'].fillna(x['Age'].mean(), inplace=True)
 ```
 - 数据划分训练集、测试集
 ```py
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=22)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
 ```
 #### 4. 特征工程
 关于特征工程详情介绍：[特征工程](/chapter4/feature_engineering.md)
 
-特征中出现类别符号，需要进行one-hot编码处理(DictVectorizer)  
-x_train.to_dict(orient="records") 需要将数组特征转换成字典数据
+特征中出现类别符号，需要进行one-hot编码处理
 ```py
-transfer = DictVectorizer(sparse=False)
-
-x_train = transfer.fit_transform(x_train.to_dict(orient="records"))
-x_test = transfer.fit_transform(x_test.to_dict(orient="records"))
+# 对类别特征进行one-hot编码
+x_train = pd.get_dummies(x_train, columns=['Pclass', 'Sex'])
+x_test = pd.get_dummies(x_test, columns=['Pclass', 'Sex'])
 ```
 
 #### 5. 模型训练
@@ -370,23 +370,31 @@ print("模型评估得分：", score)
 res_y = model.predict(x_test)
 print("预测结果：", res_y)
 ```
+#### 6. 模型保存
+训练好的模型持久化硬盘存储，下次使用直接加载，无需重复训练
+```py
+joblib.dump(model, 'model/dt.pth')
+```
 
 ## 2.2.7 决策树可视化
 
-### 1. 保存树的结构到dot文件
+### 1. 加载模型
 ```py
-from sklearn.tree import export_graphviz
-
-# 中间代码省略
-
-export_graphviz(model, out_file="./data/tree.dot", feature_names=["Age", "Pclass", "Sex", "Survived"])
+estimator = joblib.load('model/dt.pth')
 ```
 
-### 2. 网站显示结构
+### 2. 生成可视化图片
+```py
+fig, ax = plt.subplots(figsize=(50, 50))
+plot_tree(estimator,
+          ax=ax,
+          max_depth=3,
+          filled=True,
+          feature_names=['Age', 'Pclass_1', 'Pclass_2', 'Pclass_3', 'Sex_female', 'Sex_male'],
+          class_names=['生存', '不生存'])
+plt.savefig('output/a.png', dpi=100)
+```
 
-[http://webgraphviz.com/](http://webgraphviz.com/)
-
-打开dot文件内容复制到网站中显示
 
 ## 2.2.8 决策树算法优缺点
 
